@@ -18,14 +18,6 @@ TARGET_COL = 'target'
 scaler_mapping = {'minmax_scaler': MinMaxScaler, }
 
 
-scaler_tfidf = MinMaxScaler()
-
-
-X_train_tfidf_added_scaled = scaler_tfidf.transform(X_train_tfidf_added)
-X_valid_tfidf_added_scaled = scaler_tfidf.transform(X_valid_tfidf_added)
-X_test_tfidf_added_scaled = scaler_tfidf.transform(X_test_tfidf_added)
-
-
 def fit_scaler(
         X_train: pd.DataFrame,
         scaler_name: str = 'minmax_scaler',

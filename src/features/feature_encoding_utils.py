@@ -39,7 +39,7 @@ def fit_encoders(
         target_mean_encoder_filename: str = TARGET_MEAN_ENCODER_FILENAME):
 
     # X_train_hashmention = X_train[hashmention_cols]
-    X_train_no_text = X_train[no_text_cols]
+    X_train_no_text = X_train[[col for col in no_text_cols if col in X_train]]
 
     # fit frequency encoder
     # change data type to object before feeding it into the encoder

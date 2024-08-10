@@ -16,6 +16,9 @@ import pandas as pd
 from geotext import GeoText
 from nltk.corpus import stopwords
 
+pd.set_option('future.no_silent_downcasting', True)
+
+
 NO_TEXT_COLS = ['id', 'keyword', 'char_count', 'punc_ratio', 'cap_ratio',
                 'sentence_count', 'stopword_num', 'hashtag_num', 'at_num',
                 'url_num', 'country_mention_num', 'token_count']
@@ -114,10 +117,11 @@ def df_get_features(df: pd.DataFrame,
     if isinstance(df, pd.Series):
         df = df.to_frame().T
     df = df.apply(get_features, axis=1)
+    df = df[[col for col in output_cols if col in df]]
 
     if output_dir not in [None, '']:
         os.makedirs(output_dir, exist_ok=True)
-        text_output_np = df[[output_cols]].to_numpy()
+        text_output_np = df.to_numpy()
         np.save(os.path.join(output_dir, output_filename),
                 text_output_np)
 

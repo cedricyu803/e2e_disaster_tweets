@@ -21,6 +21,7 @@ vectoriser_mapping = {'count_vectoriser': CountVectorizer,
 
 def fit_vectoriser(
         X_train: pd.DataFrame,
+        text_processed_col: str = 'text_processed',
         vectoriser_name: str = 'tfidf_vectoriser',
         vectoriser_args: dict = {'min_df': 3,
                                  'max_df': 0.3,
@@ -30,7 +31,8 @@ def fit_vectoriser(
         vectoriser_filename: str = VECTORISER_FILENAME,):
 
     vectoriser = (vectoriser_mapping[vectoriser_name](**vectoriser_args)
-                  .fit(X_train))
+                  .fit(X_train[[text_processed_col]]
+                       .to_numpy().squeeze().tolist()))
 
     if output_dir not in [None, '']:
         os.makedirs(output_dir, exist_ok=True)
@@ -42,6 +44,7 @@ def fit_vectoriser(
 
 def transform_text_vec(
         X: pd.DataFrame,
+        text_processed_col: str = 'text_processed',
         output_dir: str = None,
         output_filename: str = 'X_text_vect.npy',
         vectoriser: object = None,
@@ -51,7 +54,9 @@ def transform_text_vec(
         vectoriser = joblib.load(os.path.join(
             vectoriser_dir, vectoriser_filename))
 
-    X_train_text_vect = vectoriser.transform(X).toarray()
+    X_train_text_vect = vectoriser.transform(
+        X[[text_processed_col]][[text_processed_col]]
+        .to_numpy().squeeze().tolist()).toarray()
 
     if output_dir not in [None, '']:
         os.makedirs(output_dir, exist_ok=True)

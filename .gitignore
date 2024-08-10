@@ -1,3 +1,7 @@
 /.venv
 /test.csv
 /train.csv
+data/
+data_train/
+
+# model_assets/
