@@ -31,12 +31,12 @@ TRAIN_PATH = os.path.join(DATA_DIR, 'train.csv')
 TEST_PATH = os.path.join(DATA_DIR, 'test.csv')
 DATA_OUTPUT_DIR = './data_train'
 MODEL_ASSETS_DIR = 'model_assets'
+os.makedirs(MODEL_ASSETS_DIR, exist_ok=True)
 
 
 def run_feature_extraction(data_dir: str = DATA_DIR,
-                           model_assets_dir: str = MODEL_ASSETS_DIR,
                            train_size: float = 0.8,
-                           data_output_dir: str = DATA_OUTPUT_DIR,
+                           output_dir: str = DATA_OUTPUT_DIR,
                            vectoriser_name: str = 'tfidf_vectoriser',
                            vectoriser_args: dict = {'min_df': 3,
                                                     'max_df': 0.3,
@@ -44,7 +44,6 @@ def run_feature_extraction(data_dir: str = DATA_DIR,
                                                     'ngram_range': (1, 3)},
                            scaler_name: str = 'minmax_scaler',):
 
-    os.makedirs(model_assets_dir, exist_ok=True)
     # load data
     train = pd.read_csv(os.path.join(data_dir, TRAIN_FILENAME), header=[0])
     # X_test = pd.read_csv(os.path.join(
@@ -59,86 +58,78 @@ def run_feature_extraction(data_dir: str = DATA_DIR,
     # y_valid = y_valid.iloc[:20]
     # # X_test = X_test.iloc[:20]
 
-    if data_output_dir not in [None, '']:
-        os.makedirs(data_output_dir, exist_ok=True)
-        np.save(os.path.join(data_output_dir, 'y_train.npy'),
+    if output_dir not in [None, '']:
+        os.makedirs(output_dir, exist_ok=True)
+        np.save(os.path.join(output_dir, 'y_train.npy'),
                 y_train.to_numpy())
-        np.save(os.path.join(data_output_dir, 'y_valid.npy'),
+        np.save(os.path.join(output_dir, 'y_valid.npy'),
                 y_valid.to_numpy())
 
     # preprocess text
     X_train_text_preprocessed = df_preprocess_text(
         X_train,
-        data_output_dir=data_output_dir,
+        output_dir=DATA_OUTPUT_DIR,
         output_filename='X_train_text_preprocessed.npy')
     X_valid_text_preprocessed = df_preprocess_text(
         X_valid,
-        data_output_dir=data_output_dir,
+        output_dir=DATA_OUTPUT_DIR,
         output_filename='X_valid_text_preprocessed.npy')
     # X_test_text_preprocessed = df_preprocess_text(
     #     X_test,
-    #     data_output_dir=data_output_dir,
+    #     output_dir=DATA_OUTPUT_DIR,
     #     output_filename='X_test_text_preprocessed.npy')
 
     # feature engineering
     X_train_no_text = df_get_features(
         X_train_text_preprocessed,
-        data_output_dir=data_output_dir,
+        output_dir=DATA_OUTPUT_DIR,
         output_filename='X_train_no_text.npy')
     X_valid_no_text = df_get_features(
         X_valid_text_preprocessed,
-        data_output_dir=data_output_dir,
+        output_dir=DATA_OUTPUT_DIR,
         output_filename='X_valid_no_text.npy')
     # X_test_no_text = df_get_features(
     #     X_test_text_preprocessed,
-    #     data_output_dir=data_output_dir,
+    #     output_dir=DATA_OUTPUT_DIR,
     #     output_filename='X_test_no_text.npy')
 
     # feature encoding
-    freq_encoder, target_mean_encoder, encoder_dir = fit_encoders(
-        X_train_no_text, y_train,
-        model_assets_dir=model_assets_dir)
+    freq_encoder, target_mean_encoder, _ = fit_encoders(
+        X_train_no_text, y_train)
     X_train_no_text_encoded = transform_features(
         X_train_no_text,
-        encoder_dir=encoder_dir,
-        data_output_dir=data_output_dir,
+        output_dir=DATA_OUTPUT_DIR,
         output_filename='X_train_no_text_encoded.npy',
         freq_encoder=freq_encoder, target_mean_encoder=target_mean_encoder)
     X_valid_no_text_encoded = transform_features(
         X_valid_no_text,
-        encoder_dir=encoder_dir,
-        data_output_dir=data_output_dir,
+        output_dir=DATA_OUTPUT_DIR,
         output_filename='X_valid_no_text_encoded.npy',
         freq_encoder=freq_encoder, target_mean_encoder=target_mean_encoder)
     # X_test_no_text_encoded = transform_features(
     #     X_test_no_text,
-    #     encoder_dir=encoder_dir,
-    #     data_output_dir=data_output_dir,
+    #     output_dir=DATA_OUTPUT_DIR,
     #     output_filename='X_test_no_text_encoded.npy',
     #     freq_encoder=freq_encoder, target_mean_encoder=target_mean_encoder)
 
     # text vectoriser
-    vectoriser, vectoriser_dir = fit_vectoriser(
+    vectoriser, _ = fit_vectoriser(
         X_train_text_preprocessed,
-        model_assets_dir=model_assets_dir,
         vectoriser_name=vectoriser_name,
         vectoriser_args=vectoriser_args)
     X_train_text_vect = transform_text_vec(
         X_train_text_preprocessed,
-        vectoriser_dir=vectoriser_dir,
-        data_output_dir=data_output_dir,
+        output_dir=DATA_OUTPUT_DIR,
         output_filename='X_train_text_vect.npy',
         vectoriser=vectoriser)
     X_valid_text_vect = transform_text_vec(
         X_valid_text_preprocessed,
-        vectoriser_dir=vectoriser_dir,
-        data_output_dir=data_output_dir,
+        output_dir=DATA_OUTPUT_DIR,
         output_filename='X_valid_text_vect.npy',
         vectoriser=vectoriser)
     # X_test_text_vect = transform_text_vec(
     #     X_test_text_preprocessed,
-    #     vectoriser_dir=vectoriser_dir,
-    #     data_output_dir=data_output_dir,
+    #     output_dir=DATA_OUTPUT_DIR,
     #     output_filename='X_test_text_vect.npy',
     #     vectoriser=vectoriser)
 
@@ -151,25 +142,20 @@ def run_feature_extraction(data_dir: str = DATA_DIR,
     #     [X_test_text_vect, X_test_no_text_encoded])
 
     # scaler
-    scaler, scaler_dir = fit_scaler(
-        X_train_vect_added, scaler_name=scaler_name,
-        model_assets_dir=model_assets_dir,)
+    scaler, _ = fit_scaler(X_train_vect_added, scaler_name=scaler_name)
     X_train_vect_added_scaled = transform_scales(
         X_train_vect_added,
-        scaler_dir=scaler_dir,
-        data_output_dir=data_output_dir,
+        output_dir=DATA_OUTPUT_DIR,
         output_filename='X_train_vect_added_scaled.npy',
         scaler=scaler)
     X_valid_vect_added_scaled = transform_scales(
         X_valid_vect_added,
-        scaler_dir=scaler_dir,
-        data_output_dir=data_output_dir,
+        output_dir=DATA_OUTPUT_DIR,
         output_filename='X_valid_vect_added_scaled.npy',
         scaler=scaler)
     # X_test_vect_added_scaled = transform_scales(
     #     X_test_vect_added,
-    #     scaler_dir=scaler_dir,
-    #     data_output_dir=data_output_dir,
+    #     output_dir=DATA_OUTPUT_DIR,
     #     output_filename='X_test_vect_added_scaled.npy',
     #     scaler=scaler)
 

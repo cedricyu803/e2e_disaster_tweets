@@ -7,6 +7,8 @@ import numpy as np
 import pandas as pd
 
 MODEL_ASSETS_DIR = 'model_assets'
+ENCODER_DIR = os.path.join(MODEL_ASSETS_DIR, 'encoders')
+os.makedirs(ENCODER_DIR, exist_ok=True)
 FREQ_ENCODER_FILENAME: str = 'freq_encoder.joblib'
 TARGET_MEAN_ENCODER_FILENAME: str = 'target_mean_encoder.joblib'
 
@@ -28,18 +30,15 @@ COLS_TO_KEEP = ['char_count', 'punc_ratio', 'cap_ratio',
 
 def fit_encoders(
         X_train: pd.DataFrame, y_train: pd.Series,
-        model_assets_dir: str = MODEL_ASSETS_DIR,
         no_text_cols: list = NO_TEXT_COLS,
         hashmention_cols: list = HASHMENTION_COLS,
         freq_cols: list = FREQ_COLS,
         target_mean_cols: list = TARGET_MEAN_COLS,
+        output_dir: str = ENCODER_DIR,
         freq_encoder_filename: str = FREQ_ENCODER_FILENAME,
         target_mean_encoder_filename: str = TARGET_MEAN_ENCODER_FILENAME):
 
-    os.makedirs(model_assets_dir, exist_ok=True)
-    encoder_dir = os.path.join(model_assets_dir, 'encoders')
-    os.makedirs(encoder_dir, exist_ok=True)
-
+    # X_train_hashmention = X_train[hashmention_cols]
     X_train_no_text = X_train[[col for col in no_text_cols if col in X_train]]
 
     # fit frequency encoder
@@ -53,19 +52,19 @@ def fit_encoders(
     target_mean_encoder.fit(
         X_train_no_text[target_mean_cols].astype(object), y_train)
 
-    if encoder_dir not in [None, '']:
-        os.makedirs(encoder_dir, exist_ok=True)
+    if output_dir not in [None, '']:
+        os.makedirs(output_dir, exist_ok=True)
         joblib.dump(freq_encoder, os.path.join(
-            encoder_dir, freq_encoder_filename))
+            output_dir, freq_encoder_filename))
         joblib.dump(target_mean_encoder, os.path.join(
-            encoder_dir, target_mean_encoder_filename))
+            output_dir, target_mean_encoder_filename))
 
-    return freq_encoder, target_mean_encoder, encoder_dir
+    return freq_encoder, target_mean_encoder, output_dir
 
 
 def transform_features(
         X: pd.DataFrame,
-        data_output_dir: str = None,
+        output_dir: str = None,
         output_filename: str = 'X_no_text_encoded.npy',
         no_text_cols: list = NO_TEXT_COLS,
         hashmention_cols: list = HASHMENTION_COLS,
@@ -73,7 +72,7 @@ def transform_features(
         target_mean_cols: list = TARGET_MEAN_COLS,
         cols_to_keep: list = COLS_TO_KEEP,
         freq_encoder: object = None, target_mean_encoder: object = None,
-        encoder_dir: str = None,
+        encoder_dir: str = ENCODER_DIR,
         freq_encoder_filename: str = FREQ_ENCODER_FILENAME,
         target_mean_encoder_filename: str = TARGET_MEAN_ENCODER_FILENAME):
     if freq_encoder is None:
@@ -109,10 +108,10 @@ def transform_features(
     X_no_text_encoded = X_no_text_encoded[cols_to_keep].fillna(
         X_no_text_encoded.mean())
 
-    if data_output_dir not in [None, '']:
-        os.makedirs(data_output_dir, exist_ok=True)
+    if output_dir not in [None, '']:
+        os.makedirs(output_dir, exist_ok=True)
         text_output_np = X_no_text_encoded.to_numpy()
-        np.save(os.path.join(data_output_dir, output_filename),
+        np.save(os.path.join(output_dir, output_filename),
                 text_output_np)
 
     return X_no_text_encoded

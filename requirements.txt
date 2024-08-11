@@ -22,3 +22,4 @@ geotext~=0.4.0
 beautifulsoup4~=4.12.3
 pycountry~=24.6.1
 
+fastapi~=0.112.0
