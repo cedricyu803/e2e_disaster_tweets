@@ -1,2 +1,2 @@
-model_assets_dir: model_assets
-data_output_dir: null
+model_assets_dir: model_assets # where the fitted objects/model are stored
+data_output_dir: null # where to save predictions to

@@ -19,7 +19,22 @@ def model_inference(X_test_vect_added_scaled,
                     data_output_dir: str = None,
                     output_filename: str = 'pred.npy',
                     **kwargs):
+    '''Loads fitted model and runs inference on feature data
 
+    Args:
+        X_test_vect_added_scaled (_type_): features
+        model (object, optional): fitted model.
+            If None, loads fitted model from model_assets_dir
+            Defaults to None.
+        model_assets_dir (str, optional): contains fitted objects/model.
+            Defaults to MODEL_ASSETS_DIR.
+        data_output_dir (str, optional): Defaults to None.
+        output_filename (str, optional): Defaults to 'pred.npy'.
+
+    Returns:
+        y_pred (np.ndarray):
+            predictions are 0 (not disaster) or 1 (disaster)
+    '''
     model_dir = os.path.join(model_assets_dir, MODEL_SUBDIR)
 
     if model is None:

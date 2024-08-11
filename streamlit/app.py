@@ -3,7 +3,7 @@ from backend_client import BackendClient
 
 import streamlit as st
 
-# get cloud_server_endpoint_base
+# get endpoint_base
 APP_CONFIG_PATH = './app_config.yml'
 with open(APP_CONFIG_PATH, 'r') as f:
     app_configs = yaml.load(f, yaml.SafeLoader)
@@ -32,7 +32,7 @@ if ("messages" not in st.session_state.keys() or
         [{"role": "assistant",
             "content": "Please enter your tweet to query"}]
 
-# Prompt for user input and append to chat history displayed on streamlit
+# Prompt for user input and display on streamlit
 if prompt := st.chat_input("Please enter your tweet to query"):
     st.session_state.messages.append({"role": "user", "content": prompt})
 

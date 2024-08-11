@@ -33,6 +33,8 @@ We provide an end-to-end example with the 'Disaster Tweet Classification' exampl
      5. Test the endpoint using Swagger UI at `http://localhost:3100/docs`
      6. To kill the container, run: `docker compose -f "inference_backend/docker_compose.yml" down`
 
+![image info](./pictures/fastapi_screenshot.png)
+
 3. An example Streamlit app to query the FastAPI backend in `./streamlit`
    - Folder structure:
      - `app_config.yml`: specifies `endpoint_base` of the backend
@@ -46,4 +48,4 @@ We provide an end-to-end example with the 'Disaster Tweet Classification' exampl
      4. Run `streamlit run app.py`
      5. Go to `http://localhost:8501` on a browser to start querying
 
-![image info](./streamlit_screenshot.png)
+![image info](./pictures/streamlit_screenshot.png)

@@ -44,6 +44,7 @@ def get_features(row,
 
     Args:
         row (pd.Series):
+        stops (list): nltk's list of stopwords
 
     Returns:
         row (pd.Series): with extracted features
@@ -109,9 +110,16 @@ def df_get_features(df: pd.DataFrame,
 
     Args:
         df (pd.DataFrame): text-preprocessed
+        output_cols (list, optional): Defaults to NO_TEXT_COLS.
+        model_assets_dir (str, optional): contains nltk's data.
+            Defaults to MODEL_ASSETS_DIR.
+        data_output_dir (str, optional): Defaults to None.
+        output_filename (str, optional): Defaults to 'pred.npy'.
+
     Returns:
         df (pd.DataFrame): df with new columns for extracted features
     '''
+
     os.makedirs(model_assets_dir, exist_ok=True)
     nltk.data.path.append(model_assets_dir)
     stops = set(stopwords.words('english'))

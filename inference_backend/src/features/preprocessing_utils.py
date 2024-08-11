@@ -182,6 +182,9 @@ def df_preprocess_text(df: pd.DataFrame,
     Args:
         df (pd.DataFrame):
         text_col (str, optional): Defaults to 'text'.
+        text_processed_col (str, optional): Defaults to 'text_processed'.
+        data_output_dir (str, optional): Defaults to None.
+        output_filename (str, optional): Defaults to 'X_processed.npy'.
     Returns:
         df (pd.DataFrame): df with new columns:
             'text_no_mojibake' (HTML syntax-processed), 'text_processed'

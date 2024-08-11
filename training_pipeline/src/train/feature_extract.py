@@ -42,12 +42,31 @@ def run_feature_extraction(data_dir: str = DATA_DIR,
                                                     'stop_words': 'english',
                                                     'ngram_range': (1, 3)},
                            scaler_name: str = 'minmax_scaler',):
+    '''Runs train-test split of training dataset adn feature extraction
+
+    Args:
+        data_dir (str, optional): training dataset dir. Defaults to DATA_DIR.
+        model_assets_dir (str, optional): output dir of fitted objects.
+            Defaults to MODEL_ASSETS_DIR.
+        train_size (float, optional): train size in train-test split.
+            Defaults to 0.8.
+        data_output_dir (str, optional): output dir of transformed data.
+            Defaults to DATA_OUTPUT_DIR.
+        vectoriser_name (str, optional): Defaults to 'tfidf_vectoriser'.
+        vectoriser_args (_type_, optional):
+            Defaults to {'min_df': 3, 'max_df': 0.3,
+            'stop_words': 'english', 'ngram_range': (1, 3)}.
+        scaler_name (str, optional): Defaults to 'minmax_scaler'.
+
+    Returns:
+        (X_train_vect_added_scaled, y_train,
+            X_valid_vect_added_scaled, y_valid,
+            )
+    '''
 
     os.makedirs(model_assets_dir, exist_ok=True)
     # load data
     train = pd.read_csv(os.path.join(data_dir, TRAIN_FILENAME), header=[0])
-    # X_test = pd.read_csv(os.path.join(
-    #     data_dir, TEST_FILENAME), header=[0])
     X_train, X_valid, y_train, y_valid = train_test_split(
         train.drop([TARGET_COL], axis=1), train[TARGET_COL],
         random_state=RANDOM_SEED, train_size=train_size)
@@ -56,7 +75,6 @@ def run_feature_extraction(data_dir: str = DATA_DIR,
     # y_train = y_train.iloc[:20]
     # X_valid = X_valid.iloc[:20]
     # y_valid = y_valid.iloc[:20]
-    # # X_test = X_test.iloc[:20]
 
     if data_output_dir not in [None, '']:
         os.makedirs(data_output_dir, exist_ok=True)
@@ -74,10 +92,6 @@ def run_feature_extraction(data_dir: str = DATA_DIR,
         X_valid,
         data_output_dir=data_output_dir,
         output_filename='X_valid_text_preprocessed.npy')
-    # X_test_text_preprocessed = df_preprocess_text(
-    #     X_test,
-    #     data_output_dir=data_output_dir,
-    #     output_filename='X_test_text_preprocessed.npy')
 
     # feature engineering
     X_train_no_text = df_get_features(
@@ -90,11 +104,6 @@ def run_feature_extraction(data_dir: str = DATA_DIR,
         model_assets_dir=model_assets_dir,
         data_output_dir=data_output_dir,
         output_filename='X_valid_no_text.npy')
-    # X_test_no_text = df_get_features(
-    #     X_test_text_preprocessed,
-    #     model_assets_dir=model_assets_dir,
-    #     data_output_dir=data_output_dir,
-    #     output_filename='X_test_no_text.npy')
 
     # feature encoding
     freq_encoder, target_mean_encoder, encoder_dir = fit_encoders(
@@ -112,12 +121,6 @@ def run_feature_extraction(data_dir: str = DATA_DIR,
         data_output_dir=data_output_dir,
         output_filename='X_valid_no_text_encoded.npy',
         freq_encoder=freq_encoder, target_mean_encoder=target_mean_encoder)
-    # X_test_no_text_encoded = transform_features(
-    #     X_test_no_text,
-    #     encoder_dir=encoder_dir,
-    #     data_output_dir=data_output_dir,
-    #     output_filename='X_test_no_text_encoded.npy',
-    #     freq_encoder=freq_encoder, target_mean_encoder=target_mean_encoder)
 
     # text vectoriser
     vectoriser, vectoriser_dir = fit_vectoriser(
@@ -137,20 +140,12 @@ def run_feature_extraction(data_dir: str = DATA_DIR,
         data_output_dir=data_output_dir,
         output_filename='X_valid_text_vect.npy',
         vectoriser=vectoriser)
-    # X_test_text_vect = transform_text_vec(
-    #     X_test_text_preprocessed,
-    #     vectoriser_dir=vectoriser_dir,
-    #     data_output_dir=data_output_dir,
-    #     output_filename='X_test_text_vect.npy',
-    #     vectoriser=vectoriser)
 
     # stack features togther
     X_train_vect_added = np.hstack(
         [X_train_text_vect, X_train_no_text_encoded])
     X_valid_vect_added = np.hstack(
         [X_valid_text_vect, X_valid_no_text_encoded])
-    # X_test_vect_added = np.hstack(
-    #     [X_test_text_vect, X_test_no_text_encoded])
 
     # scaler
     scaler, scaler_dir = fit_scaler(
@@ -168,14 +163,7 @@ def run_feature_extraction(data_dir: str = DATA_DIR,
         data_output_dir=data_output_dir,
         output_filename='X_valid_vect_added_scaled.npy',
         scaler=scaler)
-    # X_test_vect_added_scaled = transform_scales(
-    #     X_test_vect_added,
-    #     scaler_dir=scaler_dir,
-    #     data_output_dir=data_output_dir,
-    #     output_filename='X_test_vect_added_scaled.npy',
-    #     scaler=scaler)
 
     return (X_train_vect_added_scaled, y_train,
             X_valid_vect_added_scaled, y_valid,
-            # X_test_vect_added_scaled
             )

@@ -36,6 +36,29 @@ def fit_encoders(
         target_mean_cols: list = TARGET_MEAN_COLS,
         freq_encoder_filename: str = FREQ_ENCODER_FILENAME,
         target_mean_encoder_filename: str = TARGET_MEAN_ENCODER_FILENAME):
+    '''Fits categorical encoders (frequency and target mean)
+
+    Args:
+        X_train (pd.DataFrame):
+        y_train (pd.Series):
+        model_assets_dir (str, optional): output folder for fitted encoders.
+            Defaults to MODEL_ASSETS_DIR.
+        no_text_cols (list, optional): Defaults to NO_TEXT_COLS.
+        hashmention_cols (list, optional): Defaults to HASHMENTION_COLS.
+        freq_cols (list, optional):
+            categorical columns to be frequency encoded.
+            Defaults to FREQ_COLS.
+        target_mean_cols (list, optional):
+            categorical columns to be target mean encoded.
+            Defaults to TARGET_MEAN_COLS.
+        freq_encoder_filename (str, optional):
+            Defaults to FREQ_ENCODER_FILENAME.
+        target_mean_encoder_filename (str, optional):
+            Defaults to TARGET_MEAN_ENCODER_FILENAME.
+
+    Returns:
+        freq_encoder, target_mean_encoder, encoder_dir
+    '''
 
     os.makedirs(model_assets_dir, exist_ok=True)
     encoder_dir = os.path.join(model_assets_dir, ENCODER_SUBDIR)
@@ -77,6 +100,32 @@ def transform_features(
         encoder_dir: str = None,
         freq_encoder_filename: str = FREQ_ENCODER_FILENAME,
         target_mean_encoder_filename: str = TARGET_MEAN_ENCODER_FILENAME):
+    '''Transforms features with fitted encoders
+
+    Args:
+        X (pd.DataFrame):
+        data_output_dir (str, optional): Defaults to None.
+        output_filename (str, optional): Defaults to 'X_no_text_encoded.npy'.
+        no_text_cols (list, optional): Defaults to NO_TEXT_COLS.
+        hashmention_cols (list, optional): Defaults to HASHMENTION_COLS.
+        freq_cols (list, optional): Defaults to FREQ_COLS.
+        target_mean_cols (list, optional): Defaults to TARGET_MEAN_COLS.
+        cols_to_keep (list, optional): Defaults to COLS_TO_KEEP.
+        freq_encoder (object, optional):
+            if None, load encoder from encoder_dir.
+            Defaults to None.
+        target_mean_encoder (object, optional):
+            if None, load encoder from encoder_dir.
+            Defaults to None.
+        encoder_dir (str, optional): Defaults to None.
+        freq_encoder_filename (str, optional):
+            Defaults to FREQ_ENCODER_FILENAME.
+        target_mean_encoder_filename (str, optional):
+            Defaults to TARGET_MEAN_ENCODER_FILENAME.
+
+    Returns:
+        X_no_text_encoded: encoded features
+    '''
     if freq_encoder is None:
         freq_encoder = joblib.load(os.path.join(
             encoder_dir, freq_encoder_filename))

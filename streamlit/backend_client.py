@@ -13,7 +13,7 @@ class BackendClient():
         '''Client for accessing API endpoint.
 
         Args:
-            cloud_server_endpoint_base: str
+            endpoint_base: str
         '''
         self._logger = logging.getLogger(__name__)
         self._endpoint_base = endpoint_base

@@ -19,4 +19,5 @@ COPY . .
 
 EXPOSE $PORT
 
+# Run FastAPI
 CMD ["python3", "main.py"]

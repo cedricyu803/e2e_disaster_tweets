@@ -1,10 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Mon Oct 25 12:00:00 2021
-@author: Cedric Yu
-This file:
-text pre-processing
-"""
 import os
 
 import joblib
@@ -37,10 +31,18 @@ MODEL_ASSETS_DIR = 'model_assets'
 
 
 class Inference():
+    '''Class for loading fitted objects/model, and run inference
+    '''
     def __init__(self,
                  model_assets_dir: str = MODEL_ASSETS_DIR,
                  data_output_dir: str = None,
                  ):
+        '''Loads fitted objects/model
+
+        Args:
+            model_assets_dir (str, optional): _description_. Defaults to MODEL_ASSETS_DIR.
+            data_output_dir (str, optional): _description_. Defaults to None.
+        '''
         self.status = -1
         self.model_assets_dir = model_assets_dir
         self.data_output_dir = data_output_dir
@@ -57,6 +59,8 @@ class Inference():
         self.load_assets()
 
     def load_assets(self,):
+        '''Loads fitted objects/model
+        '''
         if self.freq_encoder is None:
             self.freq_encoder = joblib.load(os.path.join(
                 self.model_assets_dir, ENCODER_SUBDIR, FREQ_ENCODER_FILENAME))
@@ -80,6 +84,15 @@ class Inference():
         self.status = 0
 
     def parse_data(self, data):
+        '''Parses input data for inference
+
+        Args:
+            data: Either str, list of str, pd.Series, or
+                pd.DataFrame with 'text' columns
+
+        Returns:
+            X_test (pd.DataFrame):
+        '''
         if isinstance(data, str):
             X_test = pd.DataFrame([data], columns=['text'])
             X_test[['id', 'keyword']] = np.nan
@@ -92,6 +105,14 @@ class Inference():
         return X_test
 
     def extract_features(self, X_test: pd.DataFrame):
+        '''Extracts features from parsed input data
+
+        Args:
+            X_test (pd.DataFrame): parsed input data
+
+        Returns:
+            X_test_vect_added_scaled: features
+        '''
         data_output_dir = self.data_output_dir
 
         # preprocess text
@@ -136,6 +157,16 @@ class Inference():
         return X_test_vect_added_scaled
 
     def run_inference(self, data):
+        '''Runs inference on input data
+
+        Args:
+            data: Either str, list of str, pd.Series, or
+                pd.DataFrame with 'text' columns
+
+        Returns:
+            y_pred (np.ndarray):
+                predictions are 0 (not disaster) or 1 (disaster)
+        '''
         X_test = self.parse_data(data)
         X_test_vect_added_scaled = self.extract_features(X_test)
         y_pred = model_inference(

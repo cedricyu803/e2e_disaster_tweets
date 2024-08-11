@@ -22,6 +22,19 @@ def fit_scaler(
         model_assets_dir: str = MODEL_ASSETS_DIR,
         scaler_name: str = 'minmax_scaler',
         scaler_filename: str = SCALER_FILENAME,):
+    '''Fit scaler
+
+    Args:
+        X_train (pd.DataFrame):
+        model_assets_dir (str, optional):
+            output folder for fitted scaler.
+            Defaults to MODEL_ASSETS_DIR.
+        scaler_name (str, optional): Defaults to 'minmax_scaler'.
+        scaler_filename (str, optional): Defaults to SCALER_FILENAME.
+
+    Returns:
+        scaler, scaler_dir
+    '''
 
     os.makedirs(model_assets_dir, exist_ok=True)
     scaler_dir = os.path.join(model_assets_dir, SCALER_SUBDIR)
@@ -44,6 +57,21 @@ def transform_scales(
         scaler: object = None,
         scaler_dir: str = None,
         scaler_filename: str = SCALER_FILENAME,):
+    '''Transforms data with fitted scaler
+
+    Args:
+        X (pd.DataFrame):
+        data_output_dir (str, optional): Defaults to None.
+        output_filename (str, optional): Defaults to 'X_scaled.npy'.
+        scaler (object, optional):
+            if None, load scaler from scaler_dir.
+            Defaults to None.
+        scaler_dir (str, optional): Defaults to None.
+        scaler_filename (str, optional): Defaults to SCALER_FILENAME.
+
+    Returns:
+        X_scaled
+    '''
     if scaler is None:
         scaler = joblib.load(os.path.join(
             scaler_dir, scaler_filename))

@@ -24,6 +24,26 @@ def train_model(X_train_vect_added_scaled, y_train,
                 model_filename: str = MODEL_FILENAME,
                 **kwargs
                 ):
+    '''Fits model on transformed train set, evaluates model on test set.
+    Outputs fitted model and evaluation scores
+
+    Args:
+        X_train_vect_added_scaled: transformed train set
+        y_train:
+        X_valid_vect_added_scaled: transformed test set
+        y_valid:
+        model_assets_dir (str, optional):
+            output dir of fitted model and evaluation metrics.
+            Defaults to MODEL_ASSETS_DIR.
+        model_name (str, optional): Defaults to 'lr'.
+        model_params (dict, optional):
+            Defaults to {'random_state': RANDOM_SEED}.
+        metrics (list, optional): Defaults to [f1_score, roc_auc_score].
+        model_filename (str, optional): Defaults to MODEL_FILENAME.
+
+    Returns:
+        model, eval_scores
+    '''
 
     os.makedirs(model_assets_dir, exist_ok=True)
     model_dir = os.path.join(model_assets_dir, MODEL_SUBDIR)
