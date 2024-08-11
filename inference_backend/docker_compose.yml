@@ -1,0 +1,5 @@
+services:
+  api:
+    image: "disaster/inference_backend:dev"
+    ports:
+      - "3100:3100"

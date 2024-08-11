@@ -1,0 +1,7 @@
+data/
+docker_compose.yml
+credentials
+*.env
+.dockerignore
+Dockerfile
+__pycache__/
