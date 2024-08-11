@@ -26,14 +26,11 @@ NO_TEXT_COLS = ['id', 'keyword', 'char_count', 'punc_ratio', 'cap_ratio',
 
 # download required nltk data
 MODEL_ASSETS_DIR = 'model_assets'
-os.makedirs(MODEL_ASSETS_DIR, exist_ok=True)
-nltk.data.path.append(MODEL_ASSETS_DIR)
-nltk.download('stopwords', quiet=True, download_dir=MODEL_ASSETS_DIR)
-nltk.download('punkt_tab', quiet=True, download_dir=MODEL_ASSETS_DIR)
-stops = set(stopwords.words('english'))
 
 
-def get_features(row):
+def get_features(row,
+                 stops: list,
+                 ):
     '''Extracts features from preprocessed df containing
     HTML syntax-processed text (text_no_mojibake) and
     processed text (text_processed).
@@ -105,7 +102,8 @@ def get_features(row):
 
 def df_get_features(df: pd.DataFrame,
                     output_cols: list = NO_TEXT_COLS,
-                    output_dir: str = None,
+                    model_assets_dir: str = MODEL_ASSETS_DIR,
+                    data_output_dir: str = None,
                     output_filename: str = 'X_no_text.npy'):
     '''Extracts features from text-preprocessed df.
 
@@ -114,15 +112,22 @@ def df_get_features(df: pd.DataFrame,
     Returns:
         df (pd.DataFrame): df with new columns for extracted features
     '''
+
+    os.makedirs(model_assets_dir, exist_ok=True)
+    nltk.data.path.append(model_assets_dir)
+    nltk.download('stopwords', quiet=True, download_dir=model_assets_dir)
+    nltk.download('punkt_tab', quiet=True, download_dir=model_assets_dir)
+    stops = set(stopwords.words('english'))
+
     if isinstance(df, pd.Series):
         df = df.to_frame().T
-    df = df.apply(get_features, axis=1)
+    df = df.apply(lambda x: get_features(x, stops=stops), axis=1)
     df = df[[col for col in output_cols if col in df]]
 
-    if output_dir not in [None, '']:
-        os.makedirs(output_dir, exist_ok=True)
+    if data_output_dir not in [None, '']:
+        os.makedirs(data_output_dir, exist_ok=True)
         text_output_np = df.to_numpy()
-        np.save(os.path.join(output_dir, output_filename),
+        np.save(os.path.join(data_output_dir, output_filename),
                 text_output_np)
 
     return df

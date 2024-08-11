@@ -175,7 +175,7 @@ def preprocess_text(text: str):
 def df_preprocess_text(df: pd.DataFrame,
                        text_col: str = 'text',
                        text_processed_col: str = 'text_processed',
-                       output_dir: str = None,
+                       data_output_dir: str = None,
                        output_filename: str = 'X_processed.npy'):
     '''Processes text in the text_col of df.
 
@@ -194,9 +194,9 @@ def df_preprocess_text(df: pd.DataFrame,
         df = df.to_frame().T
     df = df.apply(row_text_preprocess_, axis=1)
 
-    if output_dir not in [None, '']:
-        os.makedirs(output_dir, exist_ok=True)
+    if data_output_dir not in [None, '']:
+        os.makedirs(data_output_dir, exist_ok=True)
         text_preprocessed_np = df[[text_processed_col]].to_numpy()
-        np.save(os.path.join(output_dir, output_filename),
+        np.save(os.path.join(data_output_dir, output_filename),
                 text_preprocessed_np)
     return df

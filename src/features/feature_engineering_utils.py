@@ -29,7 +29,7 @@ MODEL_ASSETS_DIR = 'model_assets'
 
 
 def get_features(row,
-                 stops: object,
+                 stops: list,
                  ):
     '''Extracts features from preprocessed df containing
     HTML syntax-processed text (text_no_mojibake) and
@@ -121,7 +121,7 @@ def df_get_features(df: pd.DataFrame,
 
     if isinstance(df, pd.Series):
         df = df.to_frame().T
-    df = df.apply(get_features, args=(stops), axis=1)
+    df = df.apply(lambda x: get_features(x, stops=stops), axis=1)
     df = df[[col for col in output_cols if col in df]]
 
     if data_output_dir not in [None, '']:

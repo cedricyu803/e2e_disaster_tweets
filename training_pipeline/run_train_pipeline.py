@@ -9,9 +9,8 @@ import argparse
 import os
 
 import yaml
-
 from src.model_train.feature_extract import run_feature_extraction
-from src.model_train.model_train import train_model
+from src.model_train.train import train_model
 
 RANDOM_SEED = int(os.getenv('RANDOM_SEED', 42))
 TEXT_COL = 'text'
