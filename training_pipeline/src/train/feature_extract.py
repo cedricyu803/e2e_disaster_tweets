@@ -53,10 +53,10 @@ def run_feature_extraction(data_dir: str = DATA_DIR,
         train.drop([TARGET_COL], axis=1), train[TARGET_COL],
         random_state=RANDOM_SEED, train_size=train_size)
 
-    X_train = X_train.iloc[:20]
-    y_train = y_train.iloc[:20]
-    X_valid = X_valid.iloc[:20]
-    y_valid = y_valid.iloc[:20]
+    # X_train = X_train.iloc[:20]
+    # y_train = y_train.iloc[:20]
+    # X_valid = X_valid.iloc[:20]
+    # y_valid = y_valid.iloc[:20]
     # # X_test = X_test.iloc[:20]
 
     if data_output_dir not in [None, '']:

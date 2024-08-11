@@ -36,7 +36,7 @@ def get_arguments():
         action='store',
         dest='config_path',
         help='config_path',
-        default='./train_config.yml',
+        default='./inference_config.yml',
         required=False)
 
     args = parser.parse_args()
