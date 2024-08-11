@@ -177,7 +177,7 @@ def run_inference(text: str,
         return "No text found, please include a \
 ?text=blah parameter in the URL", 400
     response = inference_object.run_inference(data=text)
-    return response[0], 200
+    return str(response[0]), 200
 
 
 @app.get("/status")
