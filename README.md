@@ -2,7 +2,10 @@ Last updated: August 2024
 
 # End-to-end example with the Disater Tweet dataset
 
-We provide an end-to-end example with the 'Disaster Tweet Classification' example, which classifies a tweet (text string) into whether it is a disaster or not. Previously, we performed an exploratory data analysis and ran model architecture and hyperparameter searches in a separate repo. In this repo, we implement:
+We provide an end-to-end example with the 'Disaster Tweet Classification' example, which classifies a tweet (text string) into whether it is a disaster or not. Previously, we performed an exploratory data analysis and ran model architecture and hyperparameter searches in a separate repo.
+
+In this repo, we implement a) a training pipeline, b) an inference FastAPI backend, and c) an example Streamlit app to query the FastAPI backend.
+
 1. A training pipeline in `./training_pipeline`
     - Notably we use TfidfVectorizer and logistic regression, which constitute a computationally efficient solution
     - Folder structure:
