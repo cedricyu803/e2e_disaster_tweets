@@ -112,11 +112,8 @@ def df_get_features(df: pd.DataFrame,
     Returns:
         df (pd.DataFrame): df with new columns for extracted features
     '''
-
     os.makedirs(model_assets_dir, exist_ok=True)
     nltk.data.path.append(model_assets_dir)
-    nltk.download('stopwords', quiet=True, download_dir=model_assets_dir)
-    nltk.download('punkt_tab', quiet=True, download_dir=model_assets_dir)
     stops = set(stopwords.words('english'))
 
     if isinstance(df, pd.Series):

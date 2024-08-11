@@ -7,6 +7,7 @@ import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 
 MODEL_ASSETS_DIR = 'model_assets'
+VECTORISER_SUBDIR = 'vectoriser'
 VECTORISER_FILENAME: str = 'vectoriser.joblib'
 
 RANDOM_SEED = int(os.getenv('RANDOM_SEED', 42))
@@ -29,7 +30,7 @@ def fit_vectoriser(
         vectoriser_filename: str = VECTORISER_FILENAME,):
 
     os.makedirs(model_assets_dir, exist_ok=True)
-    vectoriser_dir = os.path.join(model_assets_dir, 'vectoriser')
+    vectoriser_dir = os.path.join(model_assets_dir, VECTORISER_SUBDIR)
     os.makedirs(vectoriser_dir, exist_ok=True)
 
     vectoriser = (vectoriser_mapping[vectoriser_name](**vectoriser_args)
@@ -56,9 +57,12 @@ def transform_text_vec(
         vectoriser = joblib.load(os.path.join(
             vectoriser_dir, vectoriser_filename))
 
-    X_train_text_vect = vectoriser.transform(
-        X[[text_processed_col]][[text_processed_col]]
-        .to_numpy().squeeze().tolist()).toarray()
+    if len(X) > 1:
+        X_ = X[[text_processed_col]].to_numpy().squeeze().tolist()
+    else:
+        X_ = [X[[text_processed_col]].to_numpy().squeeze().tolist()]
+
+    X_train_text_vect = vectoriser.transform(X_).toarray()
 
     if data_output_dir not in [None, '']:
         os.makedirs(data_output_dir, exist_ok=True)

@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 
 MODEL_ASSETS_DIR = 'model_assets'
+ENCODER_SUBDIR = 'encoders'
 FREQ_ENCODER_FILENAME: str = 'freq_encoder.joblib'
 TARGET_MEAN_ENCODER_FILENAME: str = 'target_mean_encoder.joblib'
 
@@ -37,7 +38,7 @@ def fit_encoders(
         target_mean_encoder_filename: str = TARGET_MEAN_ENCODER_FILENAME):
 
     os.makedirs(model_assets_dir, exist_ok=True)
-    encoder_dir = os.path.join(model_assets_dir, 'encoders')
+    encoder_dir = os.path.join(model_assets_dir, ENCODER_SUBDIR)
     os.makedirs(encoder_dir, exist_ok=True)
 
     X_train_no_text = X_train[[col for col in no_text_cols if col in X_train]]

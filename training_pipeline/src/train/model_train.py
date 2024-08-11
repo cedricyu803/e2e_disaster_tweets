@@ -4,7 +4,6 @@ import os
 import joblib
 from sklearn.dummy import DummyClassifier
 from sklearn.metrics import f1_score, roc_auc_score
-
 from src.models.model_mapping import model_map
 
 RANDOM_SEED = int(os.getenv('RANDOM_SEED', 42))
@@ -12,6 +11,7 @@ TARGET_COL = 'target'
 
 DATA_OUTPUT_DIR = './data_train'
 MODEL_ASSETS_DIR = 'model_assets'
+MODEL_SUBDIR = 'model'
 MODEL_FILENAME = 'model.joblib'
 
 
@@ -26,7 +26,7 @@ def train_model(X_train_vect_added_scaled, y_train,
                 ):
 
     os.makedirs(model_assets_dir, exist_ok=True)
-    model_dir = os.path.join(model_assets_dir, 'model')
+    model_dir = os.path.join(model_assets_dir, MODEL_SUBDIR)
     os.makedirs(model_dir, exist_ok=True)
 
     model = model_map[model_name](**model_params)

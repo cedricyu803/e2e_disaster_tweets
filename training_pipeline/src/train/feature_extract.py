@@ -10,7 +10,6 @@ import os
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
-
 from src.features.feature_encoding_utils import fit_encoders, transform_features
 from src.features.feature_engineering_utils import df_get_features
 from src.features.preprocessing_utils import df_preprocess_text
@@ -83,14 +82,17 @@ def run_feature_extraction(data_dir: str = DATA_DIR,
     # feature engineering
     X_train_no_text = df_get_features(
         X_train_text_preprocessed,
+        model_assets_dir=model_assets_dir,
         data_output_dir=data_output_dir,
         output_filename='X_train_no_text.npy')
     X_valid_no_text = df_get_features(
         X_valid_text_preprocessed,
+        model_assets_dir=model_assets_dir,
         data_output_dir=data_output_dir,
         output_filename='X_valid_no_text.npy')
     # X_test_no_text = df_get_features(
     #     X_test_text_preprocessed,
+    #     model_assets_dir=model_assets_dir,
     #     data_output_dir=data_output_dir,
     #     output_filename='X_test_no_text.npy')
 

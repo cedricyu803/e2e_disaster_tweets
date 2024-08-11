@@ -7,6 +7,7 @@ import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 
 MODEL_ASSETS_DIR = 'model_assets'
+SCALER_SUBDIR = 'scaler'
 SCALER_FILENAME: str = 'scaler.joblib'
 
 RANDOM_SEED = int(os.getenv('RANDOM_SEED', 42))
@@ -23,7 +24,7 @@ def fit_scaler(
         scaler_filename: str = SCALER_FILENAME,):
 
     os.makedirs(model_assets_dir, exist_ok=True)
-    scaler_dir = os.path.join(model_assets_dir, 'scaler')
+    scaler_dir = os.path.join(model_assets_dir, SCALER_SUBDIR)
     os.makedirs(scaler_dir, exist_ok=True)
 
     scaler = (scaler_mapping[scaler_name]().fit(X_train))
