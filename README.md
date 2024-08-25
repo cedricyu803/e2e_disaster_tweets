@@ -1,6 +1,6 @@
 Last updated: August 2024
 
-# End-to-end example with the Disater Tweet dataset
+# End-to-end example with the Disater Tweets dataset
 
 **Keywords**: FastAPI, Streamlit, deployment, GitHub workflow, end-to-end (e2e), NLP, text preprocessing, NLTK, TfidfVectorizer
 
