@@ -2,6 +2,8 @@ Last updated: August 2024
 
 # End-to-end example with the Disater Tweet dataset
 
+**Keywords**: FastAPI, Streamlit, deployment, end-to-end (e2e), NLP, text preprocessing, NLTK, TfidfVectorizer
+
 We provide an end-to-end example with the 'Disaster Tweet Classification' example, which classifies a tweet (text string) into whether it is a disaster or not. Previously, we performed an exploratory data analysis and ran model architecture and hyperparameter searches in a separate repo.
 
 In this repo, we implement a) a training pipeline, b) an inference FastAPI backend, and c) an example Streamlit app to query the FastAPI backend.
